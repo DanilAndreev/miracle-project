@@ -37,7 +37,6 @@ function App() {
 
     function handleSelectTab(event, newIndex) {
         setSelectedTab(newIndex);
-        console.log(newIndex);
     }
 
     return (

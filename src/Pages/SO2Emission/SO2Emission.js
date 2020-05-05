@@ -28,6 +28,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { ThemeProvider } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 import Tooltip from "@material-ui/core/Tooltip";
+import Divider from "@material-ui/core/Divider";
 
 const ResultFields_theme = createMuiTheme({
     palette: {
@@ -118,7 +119,7 @@ export default function SO2Emission() {
 
     function handleInput(event) {
         function isNumber(text) {
-            const re = /^[0-9.\b]+$/;
+            const re = /^[0-9.\-\b]+$/;
             if (text === '' || re.test(text)) {
                 return true;
             }
@@ -261,6 +262,7 @@ export default function SO2Emission() {
                         <FormHelperText className={classes.warning}>Help text</FormHelperText>}
                     </FormGroup>
 
+                    <br/>
                     <ThemeProvider theme={ResultFields_theme}>
                         <FormGroup>
                             <FormLabel component="legend">Результат</FormLabel>
