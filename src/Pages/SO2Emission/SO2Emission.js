@@ -72,7 +72,7 @@ export default function SO2Emission() {
             if (isNaN(+value)) {
                 throw new Error('Введіть корректне число');
             }
-            if (value[0] === '0' && value[1] !== undefined) {
+            if (value[0] === '0' && value[1] !== undefined && value[1]!== '.') {
                 throw new Error('Число не може починатися з нуля');
             }
             removeFieldError(key);
