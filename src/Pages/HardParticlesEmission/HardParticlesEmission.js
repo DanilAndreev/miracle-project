@@ -25,13 +25,13 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import UpdateIcon from '@material-ui/icons/Update';
 
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import {ThemeProvider} from '@material-ui/core/styles';
-import {blue} from '@material-ui/core/colors';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
 import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
-import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import List from "@material-ui/core/List";
 
 const ResultFields_theme = createMuiTheme({
     palette: {
@@ -39,8 +39,8 @@ const ResultFields_theme = createMuiTheme({
     },
 });
 
-export default function SO2Emission() {
-    const [input, setInput] = React.useState({Qi: 20.47, Sr: 2.6, n1: 0.06, n2: 0.00001, B: 1, Bi: 1096363});
+export default function HardParticlesEmission() {
+    const [input, setInput] = React.useState({Qi: 20.47, Ar: 25.5, Awin: 0.75, Gwin: 2, nzu: 0.97, ktws: 0.01, Bi: 1096363});
     const [output, setOutput] = React.useState({});
     const [inFocus, setInFocus] = React.useState(null);
     const [decoratedResult, setDecoratedResult] = React.useState(false);
@@ -72,7 +72,7 @@ export default function SO2Emission() {
             if (isNaN(+value)) {
                 throw new Error('Введіть корректне число');
             }
-            if (value[0] === '0' && value[1] !== undefined) {
+            if (value[0] === '0' && value[1] !== undefined && value[1]!== '.') {
                 throw new Error('Число не може починатися з нуля');
             }
             removeFieldError(key);
@@ -97,20 +97,16 @@ export default function SO2Emission() {
             return noErrors;
         }
 
-
         try {
-
-
             if (!checkInput(input)) {
                 return false;
             }
-            const {Qi, Sr, n1, n2, B, Bi} = input;
+            const {Qi, Ar, Awin, Gwin, nzu, ktws, Bi} = input;
 
+            const Kte = (Math.pow(10, 6)/Qi)*Awin*(Ar/(100-Gwin))*(1-nzu)+(+ktws);
+            const Ej = Math.pow(10, -6) * Kte * Bi * Qi;
 
-            const Kso2 = (Math.pow(10, 6) / Qi) * ((2 * Sr) / 100) * (1 - n1) * (1 - n2 * B);
-            const Ej = Math.pow(10, -6) * Kso2 * Bi * Qi;
-
-            setOutput({result_kso2: Kso2, result_ej: Ej});
+            setOutput({result_kte: Kte, result_ej: Ej});
 
             setDecoratedResult(true);
             return true;
@@ -169,50 +165,40 @@ export default function SO2Emission() {
                         <ListItem>
                             <ListItemText
                                 primary={<>Q<sub>i</sub><sup>r</sup> (Нижча робоча теплота згоряння палива, МДж/кг)</>}
-                                secondary={`Теплота, що виділяється при повному
-                        окисленні всіх горючих складових палива.`}
+                                secondary={`Теплота, що виділяється при повному окисленні всіх горючих складових палива.`}
                             />
                         </ListItem>
                         <ListItem>
                             <ListItemText
-                                primary={<>S<sup>r</sup> (Вміст сірки в паливі на робочу масу за проміжок часу P, %)</>}
-                                secondary={`Масовий вміст сірки в робочій
-                        масі потрібно визначати під час технічного аналізу палива відповідно до ГОСТ 27313-95 (ISO
-                        1170-77). Усереднені значення вмісту сірки для різних видів і марок палива наведено в додатку Г . Ці
-                        значення беруться у випадку відсутності достовірних даних технічного аналізу.`}
+                                primary={<>A<sup>r</sup> (Вміст золи в паливі на робочу масу, %)</>}
+                                secondary={<>Вміст золи A<sub>r</sub> в паливі та горючих у викиді твердих частинок Г<sub>вин</sub> визначаються при проведенні технічного аналізу за ГОСТ 11022-95 (ISO 1171-81) палива і леткої золи, яка виходить з енергетичної установки, відповідно.</>}
                             />
                         </ListItem>
                         <ListItem>
                             <ListItemText
-                                primary={<>&eta;<sub>I</sub> (Ефективність зв’язування сірки золою або сорбентом у енергетичній установці)</>}
-                                secondary={`Ефективність
-                        зв’язування оксидів сірки золою або сорбентом у енергетичній установці n1 залежить від
-                        технології спалювання та хімічного складу палива, яке спалюється, і типу сорбенту. Під час
-                        спалювання твердого палива, до мінеральної складової якого входять сполуки лужних та
-                        лужноземельних металів, відбувається часткове зв’язування сірки з утворенням сульфатів або
-                        сульфітів. Під час спалювання твердого палива за технологіями киплячого шару подача сорбенту
-                        разом з паливом забезпечує ефективне зв’язування сірки в топці енергетичної установки. За
-                        відсутності даних для енергетичної установки про ефективність зв’язування сірки в топковому
-                        просторі значення n1.`}
+                                primary={<>A<sub>вин</sub> (Частка золи, яка виходить з котла у вигляді леткої золи)</>}
+                                secondary={<>Частка золи, яка виноситься з енергетичної установки у вигляді леткої золи, A<sub>вин</sub> залежить від технології спалювання палива і визначається за даними останніх випробувань енергетичної установки, а за їх відсутності – за паспортними даними. За відсутності таких даних значення A<sub>вин</sub> приймаються згідно з таблицею </>}
                             />
                         </ListItem>
                         <ListItem>
                             <ListItemText
-                                primary={<>&eta;<sub>II</sub> (Ефективність очистки димових газів від оксидів сірки)</>}
-                                secondary={`Димові гази можуть бути очищені від
-                        оксидів сірки в сіркоочисних установках шляхом застосування технологій десульфуризації димових
-                        газів з різною ефективністю очищення n2.`}
+                                primary={<>Г<sub>вин</sub> (Масовий вміст горючих речовин у викидах твердих частинок, %)</>}
+                                secondary={<>Вміст золи A<sub>r</sub> в паливі та горючих у викиді твердих частинок Г<sub>вин</sub> визначаються при проведенні технічного аналізу за ГОСТ 11022-95 (ISO 1171-81) палива і леткої золи, яка виходить з енергетичної установки, відповідно.</>}
                             />
                         </ListItem>
                         <ListItem>
                             <ListItemText
-                                primary={<>&beta; (Коефіцієнт роботи сіркоочисної установки)</>}
-                                secondary={`Визначається як відношення часу роботи
-                        сіркоочисної установки до часу роботи енергетичної установки. Для розрахунків необхідно
-                        використовувати значення n2, одержане під час останнього випробування сіркоочисної установки, і
-                        значення B, одержане при аналізі даних про роботу очисної та енергетичної установок у цілому.`}
+                                primary={<>&eta;<sub>зу</sub> (Ефективність очищення димових газів від твердих частинок)</>}
+                                secondary={<>Значення ефективності очищення димових газів від твердих частинок &eta;<sub>зу</sub> визначається за результатами останніх випробувань золоуловлювальної установки або за її паспортними даними. Ефективність золоуловлювальної установки визначається як різниця між одиницею та відношенням масових концентрацій твердих частинок після і до золоуловлювальної установки</>}
                             />
                         </ListItem>
+                        <ListItem>
+                            <ListItemText
+                                primary={<>k<sub>твS</sub> (Показник емісії твердих продуктів взаємодії сорбенту та оксидів сірки і твердих частинок сорбенту, г/ГДж)</>}
+                                secondary={<>Показник емісії твердих частинок невикористаного в енергетичній установці сорбенту та утворених сульфатів і сульфітів k<sub>твS</sub>, г/ГДж</>}
+                            />
+                        </ListItem>
+
                         <ListItem>
                             <ListItemText
                                 primary={<>B<sub>i</sub> (Витрата i-го палива за проміжок часу P, т)</>}
@@ -246,76 +232,83 @@ export default function SO2Emission() {
                         </FormHelperText>}
                         <TextField
                             required
-                            helperText={fieldErrors.Sr}
-                            label={<>S<sup>r</sup></>}
-                            name={'Sr'}
+                            helperText={fieldErrors.Ar}
+                            label={<>A<sup>r</sup></>}
+                            name={'Ar'}
                             fullWidth
                             onChange={handleInput}
-                            value={input.Sr || ''}
+                            value={input.Ar || ''}
                             onFocus={handleFocus}
-                            error={!!fieldErrors.Sr}
+                            error={!!fieldErrors.Ar}
                         />
-                        <FormHelperText error={!!fieldErrors.Sr}>Вміст сірки в паливі на робочу масу за проміжок часу P,
-                            %</FormHelperText>
-                        {inFocus === 'Sr' &&
-                        <FormHelperText className={classes.warning}>Масовий вміст сірки в робочій масі потрібно
-                            визначати під час технічного аналізу палива відповідно до ГОСТ 27313-95 (ISO 1170-77).
-                            Усереднені значення вмісту сірки для різних видів і марок палива наведено в додатку Г . Ці
-                            значення беруться у випадку відсутності достовірних даних технічного аналізу.
+                        <FormHelperText error={!!fieldErrors.Ar}>Вміст золи в паливі на робочу масу, %</FormHelperText>
+                        {inFocus === 'Ar' &&
+                        <FormHelperText className={classes.warning}>
+                            Вміст золи Ar в паливі та горючих у викиді твердих частинок Г(вин) визначаються при проведенні технічного аналізу за ГОСТ 11022-95 (ISO 1171-81) палива і леткої золи, яка виходить з енергетичної установки, відповідно.
                         </FormHelperText>}
                         <TextField
                             required
-                            helperText={fieldErrors.n1}
-                            label={<>&eta;<sub>I</sub></>}
-                            name={'n1'}
+                            helperText={fieldErrors.Awin}
+                            label={<>A<sub>вин</sub></>}
+                            name={'Awin'}
                             fullWidth
                             onChange={handleInput}
-                            value={input.n1 || ''}
+                            value={input.Awin || ''}
                             onFocus={handleFocus}
-                            error={!!fieldErrors.n1}
+                            error={!!fieldErrors.Awin}
                         />
-                        <FormHelperText error={!!fieldErrors.n1}>Ефективність зв’язування сірки золою або сорбентом у
-                            енергетичній установці</FormHelperText>
-                        {inFocus === 'n1' &&
+                        <FormHelperText error={!!fieldErrors.Awin}>Частка золи, яка виходить з котла у вигляді леткої золи</FormHelperText>
+                        {inFocus === 'Awin' &&
                         <FormHelperText className={classes.warning}>
-                            Ефективність зв’язування оксидів сірки золою або сорбентом у енергетичній установці n1. За
-                            відсутності даних для енергетичної установки про ефективність зв’язування сірки в топковому
-                            просторі значення n1.
+                            Частка золи, яка виноситься з енергетичної установки у вигляді леткої золи, A(вин) залежить від технології спалювання палива і визначається за даними останніх випробувань енергетичної установки, а за їх відсутності – за паспортними даними
                         </FormHelperText>}
                         <TextField
                             required
-                            helperText={fieldErrors.n2}
-                            label={<>&eta;<sub>II</sub></>}
-                            name={'n2'}
+                            helperText={fieldErrors.Gwin}
+                            label={<>Г<sub>вин</sub></>}
+                            name={'Gwin'}
                             fullWidth
                             onChange={handleInput}
-                            value={input.n2 || ''}
+                            value={input.Gwin || ''}
                             onFocus={handleFocus}
-                            error={!!fieldErrors.n2}
+                            error={!!fieldErrors.Gwin}
                         />
-                        <FormHelperText error={!!fieldErrors.n2}>Ефективність очистки димових газів від оксидів
-                            сірки</FormHelperText>
-                        {inFocus === 'n2' &&
+                        <FormHelperText error={!!fieldErrors.Gwin}>Масовий вміст горючих речовин у викидах твердих частинок, %</FormHelperText>
+                        {inFocus === 'Gwin' &&
                         <FormHelperText className={classes.warning}>
-                            Димові гази можуть бути очищені від оксидів сірки в сіркоочисних установках шляхом
-                            застосування технологій десульфуризації димових газів з різною ефективністю очищення
-                            n2 </FormHelperText>}
+                            Вміст золи Ar в паливі та горючих у викиді твердих частинок Г(вин) визначаються при проведенні технічного аналізу за ГОСТ 11022-95 (ISO 1171-81) палива і леткої золи, яка виходить з енергетичної установки, відповідно.
+                        </FormHelperText>}
                         <TextField
                             required
-                            helperText={fieldErrors.B}
-                            label={<>&beta;</>}
-                            name={'B'}
+                            helperText={fieldErrors.nzu}
+                            label={<>&eta;<sub>зу</sub></>}
+                            name={'nzu'}
                             fullWidth
                             onChange={handleInput}
-                            value={input.B || ''}
+                            value={input.nzu || ''}
                             onFocus={handleFocus}
-                            error={!!fieldErrors.B}
+                            error={!!fieldErrors.nzu}
                         />
-                        <FormHelperText error={!!fieldErrors.B}>Коефіцієнт роботи сіркоочисної
-                            установки</FormHelperText>
-                        {inFocus === 'B' && <FormHelperText className={classes.warning}>
-                            Коефіцієнт роботи сіркоочисної установки B визначається як відношення часу роботи
-                            сіркоочисної установки до часу роботи енергетичної установки.
+                        <FormHelperText error={!!fieldErrors.nzu}>Ефективність очищення димових газів від твердих частинок</FormHelperText>
+                        {inFocus === 'nzu' &&
+                        <FormHelperText className={classes.warning}>
+                            Значення ефективності очищення димових газів від твердих частинок hзу визначається за результатами останніх випробувань золоуловлювальної установки або за її паспортними даними. Ефективність золоуловлювальної установки визначається як різниця між одиницею та відношенням масових концентрацій твердих частинок після і до золоуловлювальної установки
+                        </FormHelperText>}
+                        <TextField
+                            required
+                            helperText={fieldErrors.ktws}
+                            label={<>k<sub>твS</sub></>}
+                            name={'ktws'}
+                            fullWidth
+                            onChange={handleInput}
+                            value={input.ktws || ''}
+                            onFocus={handleFocus}
+                            error={!!fieldErrors.ktws}
+                        />
+                        <FormHelperText error={!!fieldErrors.ktws}>Показник емісії твердих продуктів взаємодії сорбенту та оксидів сірки і твердих частинок сорбенту, г/ГДж</FormHelperText>
+                        {inFocus === 'ktws' &&
+                        <FormHelperText className={classes.warning}>
+                            Показник емісії твердих частинок невикористаного в енергетичній установці сорбенту та утворених сульфатів і сульфітів kтвS, г/ГДж
                         </FormHelperText>}
                         <TextField
                             required
@@ -328,11 +321,9 @@ export default function SO2Emission() {
                             onFocus={handleFocus}
                             error={!!fieldErrors.Bi}
                         />
-                        <FormHelperText error={!!fieldErrors.Bi}>Витрата i-го палива за проміжок часу P,
-                            т</FormHelperText>
+                        <FormHelperText error={!!fieldErrors.Bi}>Витрата i-го палива за проміжок часу P, т</FormHelperText>
                         {inFocus === 'Bi' &&
-                        <FormHelperText className={classes.warning}>Витрата i-ї одиниці палива у системі за проміжок
-                            часу P, т</FormHelperText>}
+                        <FormHelperText className={classes.warning}>Витрата i-ї одиниці палива у системі за проміжок часу P, т</FormHelperText>}
                     </FormGroup>
 
                     <br/>
@@ -340,12 +331,12 @@ export default function SO2Emission() {
                         <FormGroup>
                             <FormLabel component="legend">Результат</FormLabel>
                             <TextField
-                                label={<>K<sub>SO<sub>2</sub></sub></>}
-                                helperText={'Показник емісії  kSO2  г/ГДж, оксидів сірки SO2 та SO3'}
-                                name={'result_kso2'}
+                                label={<>k<sub>тв</sub></>}
+                                helperText={'Показник емісії речовини у вигляді суспендованих твердих частинок'}
+                                name={'result_kte'}
                                 fullWidth
                                 disabled
-                                value={output.result_kso2 || ''}
+                                value={output.result_kte || ''}
                                 error={decoratedResult}
                             />
                             <TextField
@@ -380,7 +371,6 @@ export default function SO2Emission() {
                                 <UpdateIcon/>
                             </Button>
                         </Tooltip>
-
                     </ButtonGroup>
                 </FormControl>
             </Paper>

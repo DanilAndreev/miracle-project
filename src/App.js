@@ -10,6 +10,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import './App.css';
 import SO2Emission from './Pages/SO2Emission/SO2Emission';
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import HardParticlesEmission from "./Pages/HardParticlesEmission/HardParticlesEmission";
+import LuganskaHES from "./Pages/LuganskaHES/LuganskaHES";
 
 const theme = createMuiTheme();
 
@@ -51,13 +53,18 @@ function App() {
                             aria-label="simple tabs example"
                             variant="fullWidth"
                         >
-                            <Tab label="SO2 Emission" id={'tab-1'} aria-controls={'tabpanel-1'}/>
-                            <Tab label="Item Two" id={'tab-2'} aria-controls={'tabpanel-2'}/>
+                            <Tab label="Луганська ТЕС" id={'tab-0'} aria-controls={'tabpanel-0'}/>
+                            <Tab label="SO2" id={'tab-1'} aria-controls={'tabpanel-1'}/>
+                            <Tab label="Викиди твердих частинок" id={'tab-2'} aria-controls={'tabpanel-2'}/>
                         </Tabs>
                         <TabPanel current={selectedTab} index={0}>
-                            <SO2Emission/>
+                            <LuganskaHES />
                         </TabPanel>
                         <TabPanel current={selectedTab} index={1}>
+                            <SO2Emission/>
+                        </TabPanel>
+                        <TabPanel current={selectedTab} index={2}>
+                            <HardParticlesEmission />
                         </TabPanel>
                         <Box>
                             Powered by Andrieiev Danil & Demchyshyn Andrey (C)2020
