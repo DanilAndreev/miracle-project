@@ -1,6 +1,7 @@
 {
   "name": "miracle_project",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "author": {
     "name": "Danil Andrieiev",
