@@ -1,10 +1,21 @@
 {
-  "name": "miracle_project",
-  "version": "0.1.0",
-  "homepage": "./",
-  "private": true,
+  "name": "miracle-project",
+  "version": "1.0.0",
+  "description": "Environmental pollution calculator for laboratory work at my university.",
+  "homepage": "https://danilandreev.github.io/miracle-project/",
+  "keywords": ["react", "calculator", "ecological", "pollution"],
+  "license": "MIT",
+  "private": false,
   "author": {
     "name": "Danil Andrieiev",
+    "email": "danssg08@gmail.com"
+  },
+  "repository": {
+    "url": "https://github.com/DanilAndreev/miracle-project",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/DanilAndreev/miracle-project/issues",
     "email": "danssg08@gmail.com"
   },
   "dependencies": {
@@ -22,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
