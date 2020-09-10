@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/miracle-project/static/css/main.8ab6f918.chunk.css",
+    "main.js": "/miracle-project/static/js/main.ed064faf.chunk.js",
+    "main.js.map": "/miracle-project/static/js/main.ed064faf.chunk.js.map",
+    "runtime-main.js": "/miracle-project/static/js/runtime-main.ed802f05.js",
+    "runtime-main.js.map": "/miracle-project/static/js/runtime-main.ed802f05.js.map",
+    "static/js/2.33994003.chunk.js": "/miracle-project/static/js/2.33994003.chunk.js",
+    "static/js/2.33994003.chunk.js.map": "/miracle-project/static/js/2.33994003.chunk.js.map",
+    "index.html": "/miracle-project/index.html",
+    "precache-manifest.768b4b34d8275f05977f197132c3a183.js": "/miracle-project/precache-manifest.768b4b34d8275f05977f197132c3a183.js",
+    "service-worker.js": "/miracle-project/service-worker.js",
+    "static/css/main.8ab6f918.chunk.css.map": "/miracle-project/static/css/main.8ab6f918.chunk.css.map",
+    "static/js/2.33994003.chunk.js.LICENSE.txt": "/miracle-project/static/js/2.33994003.chunk.js.LICENSE.txt",
+    "static/media/HES.jpg": "/miracle-project/static/media/HES.d788840c.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ed802f05.js",
+    "static/js/2.33994003.chunk.js",
+    "static/css/main.8ab6f918.chunk.css",
+    "static/js/main.ed064faf.chunk.js"
+  ]
+}
